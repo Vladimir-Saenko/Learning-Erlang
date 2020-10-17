@@ -11,7 +11,7 @@
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2,
   code_change/3]).
--export([stop/1,store/2,take/2]).
+-export([stop/0,store/1,take/1]).
 
 -define(SERVER, ?MODULE).
 
@@ -31,8 +31,7 @@ handle_call(terminate,_From,State) ->
   {stop,normal,ok,State};
 
 handle_call({take,Item},_From,State) ->
-  Reply = take_item(Item),
-  {reply,Reply,State};
+  {reply,rep_server:take_item(Item),State};
 
 handle_call(_Request, _From, State = #req_serv_state{}) ->
   {reply, ok, State}.
@@ -54,18 +53,15 @@ code_change(_OldVsn, State = #req_serv_state{}, _Extra) ->
 %%% API
 %%%===================================================================
 
-stop(Pid) ->
-  gen_server:call(Pid,terminate).
+stop() ->
+  gen_server:call(?SERVER,terminate).
 
-store(Pid,Item) ->
-  gen_server:call(Pid,{store,Item}).
+store(Item) ->
+  gen_server:call(?SERVER,{store,Item}).
 
-take(Pid,Item) ->
-  gen_server:call(Pid,{take,Item}).
+take(Item) ->
+  gen_server:call(?SERVER,{take,Item}).
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-
-take_item(Item) ->
-  rep_server:take_item(Item).
