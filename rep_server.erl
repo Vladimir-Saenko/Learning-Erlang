@@ -11,7 +11,7 @@
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2,
   code_change/3]).
--export([stop/1,take_item/2]).
+-export([stop/0,take_item/1]).
 
 -define(SERVER, ?MODULE).
 
@@ -53,11 +53,11 @@ code_change(_OldVsn, State = #rep_server_state{}, _Extra) ->
 %%% API
 %%%===================================================================
 
-stop(Pid) ->
-  gen_server:call(Pid,terminate).
+stop() ->
+  gen_server:call(?SERVER,terminate).
 
-take_item(Pid,Item) ->
-  gen_server:call(Pid,{take,Item}).
+take_item(Item) ->
+  gen_server:call(?SERVER,{take,Item}).
 
 %%%===================================================================
 %%% Internal functions

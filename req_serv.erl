@@ -31,7 +31,7 @@ handle_call(terminate,_From,State) ->
   {stop,normal,ok,State};
 
 handle_call({take,Item},_From,State) ->
-  Reply = rep_server:take_item(self(),Item),
+  Reply = take_item(Item),
   {reply,Reply,State};
 
 handle_call(_Request, _From, State = #req_serv_state{}) ->
@@ -45,7 +45,6 @@ handle_info(_Info, State = #req_serv_state{}) ->
 
 terminate(normal, _State = #req_serv_state{}) ->
   io:format("Сервер запросов выключен~n"),
-  rep_server:stop(self()),
   ok.
 
 code_change(_OldVsn, State = #req_serv_state{}, _Extra) ->
@@ -67,3 +66,6 @@ take(Pid,Item) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
+take_item(Item) ->
+  rep_server:take_item(Item).
