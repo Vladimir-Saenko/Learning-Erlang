@@ -33,6 +33,9 @@ handle_call(terminate,_From,State) ->
 handle_call({take,Item},_From,State) ->
   {reply,rep_server:take_item(Item),State};
 
+handle_call({store,Item},_From,State) ->
+  {reply,rep_server:store_item(Item),State};
+
 handle_call(_Request, _From, State = #req_serv_state{}) ->
   {reply, ok, State}.
 
